@@ -2,7 +2,7 @@
 """"""
 from flask import Flask, jsonify
 from models import storage
-from api.v1.views import app_views 
+from api.v1.views import app_views
 import os
 
 
@@ -17,6 +17,7 @@ app.register_blueprint(app_views)
 def teardown_db(exception):
     """remove the current session"""
     storage.close()
+
 
 if __name__ == '__main__':
     host = os.getenv("HBNB_API_HOST", "0.0.0.0")
