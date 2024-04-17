@@ -23,7 +23,7 @@ def teardown_db(exception):
 def not_found(e):
     """return a JSON-formatted 404"""
     error = {
-        'error' : 'Not found'
+        'error': 'Not found'
     }
     return jsonify(error)
 
