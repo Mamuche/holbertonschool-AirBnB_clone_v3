@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for City"""
-from calendar import c
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
