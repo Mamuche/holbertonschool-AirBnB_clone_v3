@@ -1,7 +1,7 @@
 #!/usr/bin/python3
-""""""
+"""This module handles all default RestFul API actions for State"""
 from api.v1.views import app_views
-from flask import Flask, jsonify, request, abort
+from flask import jsonify, request, abort
 from models.state import State
 from models import storage
 
@@ -9,7 +9,7 @@ from models import storage
 """Retrieve the list of all states"""
 
 
-@app_views.route('/states', strict_slashes=False, methods=['GET'])
+@app_views.route('/states', methods=['GET'], strict_slashes=False)
 def get_states():
     result = []
     for state in storage.all(State).values():
@@ -18,52 +18,57 @@ def get_states():
     return jsonify(result)
 
 
-"""Retrieve a specific report"""
+"""Retrieve a specific State"""
 
 
-@app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
+@app_views.route('/states/<state_id>',methods=['GET'], strict_slashes=False)
 def get_state(state_id):
+    if not state_id:
+        abort(404)
     state = storage.get(State, state_id)
     if not state:
         abort(404)
+
     return jsonify(state.to_dict())
 
 
-"""Supprimer un état"""
+"""Deletes a State"""
 
 
-@app_views.route('/states/<state_id>', strict_slashes=False,
-                 methods=['DELETE'])
+@app_views.route('/states/<state_id>', methods=['DELETE'], 
+                 strict_slashes=False)
 def delete_state(state_id):
+    if not state_id:
+        abort(404)
+
     state = storage.get(State, state_id)
     if not state:
-        """abort immediately stops processing the current request"""
         abort(404)
+
     state.delete()
-    """200 indicates successful request"""
+    storage.save()
+
     return jsonify({}), 200
 
 
-"""Create a new report"""
+"""Create a new State"""
 
 
-@app_views.route('/states', strict_slashes=False, methods=['POST'])
+@app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
-    """analyzes the request body and attempts to extract
-    the JSON data present"""
     data = request.get_json()
-    if not data:
+    if data is not dict:
         abort(400, "Not a JSON")
     if 'name' not in data:
         abort(400, "Missing name")
-    """**data passes each key-value pair in the data dictionary
-    as a named argument when the State object is created."""
+
     new_state = State(**data)
     new_state.save()
+
     return jsonify(new_state.to_dict()), 201
 
 
-"""Update an existing report"""
+"""Update an existing State"""
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
@@ -71,9 +76,11 @@ def update_state(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
+
     data = request.get_json()
-    if not data:
+    if data is not dict:
         abort(400, "Not a JSON")
+
     ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys:

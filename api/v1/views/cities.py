@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for City"""
 from api.v1.views import app_views
-from flask import Flask, jsonify, abort, request
+from flask import jsonify, abort, request
 from models import storage
 from models.city import City
 from models.state import State
@@ -11,6 +11,9 @@ from models.state import State
                  methods=['GET'], strict_slashes=False)
 def get_cities(state_id):
     """Retrieves the list of all City objects of a State"""
+    if state_id is None:
+        abort(404)
+
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
@@ -25,6 +28,9 @@ def get_cities(state_id):
 @app_views.route('/cities/<city_id>', methods=['GET'], strict_slashes=False)
 def get_city(city_id):
     """Retrieves a City object"""
+    if city_id is None:
+        abort(404)
+
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -35,6 +41,9 @@ def get_city(city_id):
 @app_views.route('/cities/<city_id>', methods=['DELETE'], strict_slashes=False)
 def delete_city(city_id):
     """Deletes a City object"""
+    if city_id is None:
+        abort(404)
+
     city = storage.get(City, city_id)
     if city is None:
         abort(404)
@@ -49,18 +58,23 @@ def delete_city(city_id):
                  methods=['POST'], strict_slashes=False)
 def create_city(state_id):
     """Creates a City"""
-    city = request.get_json()
-    if city is None:
-        abort(400, 'Not a JSON')
+    if state_id is None:
+        abort(404)
 
     state = storage.get(State, state_id)
     if state is None:
         abort(404)
 
+    city = request.get_json()
+    if city is not dict:
+        abort(400, 'Not a JSON')
+
     if 'name' not in city:
         abort(400, 'Missing name')
 
-    new_city = City(name=city['name'], state_id=state_id)*
+    new_city = City(**city)
+    new_city.state_id = state_id
+
     storage.new(new_city)
     new_city.save()
 
