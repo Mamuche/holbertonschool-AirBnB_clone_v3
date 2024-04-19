@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for City"""
+from calendar import c
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
@@ -66,10 +67,10 @@ def create_city(state_id):
         abort(404)
 
     city = request.get_json()
-    if city is not dict:
+    if city is None:
         abort(400, 'Not a JSON')
 
-    if 'name' not in city:
+    if city.get('name') is None:
         abort(400, 'Missing name')
 
     new_city = City(**city)

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for State"""
+from tkinter import N
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from models.state import State
@@ -58,9 +59,10 @@ def delete_state(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
     data = request.get_json()
-    if data is not dict:
+    if data is None:
         abort(400, "Not a JSON")
-    if 'name' not in data:
+
+    if data.get('name') is None:
         abort(400, "Missing name")
 
     new_state = State(**data)
@@ -79,7 +81,7 @@ def update_state(state_id):
         abort(404)
 
     data = request.get_json()
-    if data is not dict:
+    if data is None:
         abort(400, "Not a JSON")
 
     ignore_keys = ['id', 'created_at', 'updated_at']
