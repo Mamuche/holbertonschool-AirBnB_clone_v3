@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for State"""
-from tkinter import N
 from api.v1.views import app_views
 from flask import jsonify, request, abort
 from models.state import State
