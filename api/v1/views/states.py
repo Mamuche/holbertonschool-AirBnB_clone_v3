@@ -7,19 +7,19 @@ from models import storage
 
 
 """Retrieve the list of all states"""
-@app_views.route('/states', strict_slashes=False, methods=['GET'])
+@app_views.route('/states',strict_slashes=False, methods=['GET'])
 def get_states():
     result = []
     for state in storage.all(State).values():
         result.append(state.to_dict())
 
-        return jsonify(result)
+    return jsonify(result)
 
 
 """Retrieve a specific report"""
 @app_views.route('/states/<state_id>',strict_slashes=False, methods=['GET'])
 def get_state(state_id):
-    state = State.get(state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     return jsonify(state.to_dict())
@@ -29,7 +29,7 @@ def get_state(state_id):
 @app_views.route('/states/<state_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_state(state_id):
-    state = State.get(state_id)
+    state = storage.get(State, state_id)
     if not state:
         """abort immediately stops processing the current request"""
         abort(404)
@@ -56,7 +56,7 @@ def create_state():
 """Update an existing report"""
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
 def update_state(state_id):
-    state = State.get(state_id)
+    state = storage.get(State, state_id)
     if not state:
         abort(404)
     data = request.get_json()
