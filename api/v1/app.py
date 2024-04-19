@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""""""
+"""Starts a Flask web application"""
 from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
@@ -25,7 +25,7 @@ def not_found(e):
     error = {
         'error': 'Not found'
     }
-    return jsonify(error)
+    return jsonify(error), 404
 
 
 if __name__ == '__main__':

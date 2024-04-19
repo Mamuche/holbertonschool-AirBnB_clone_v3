@@ -21,7 +21,8 @@ def get_states():
 """Retrieve a specific State"""
 
 
-@app_views.route('/states/<state_id>',methods=['GET'], strict_slashes=False)
+@app_views.route('/states/<state_id>', methods=['GET'],
+                 strict_slashes=False)
 def get_state(state_id):
     if not state_id:
         abort(404)
@@ -35,7 +36,7 @@ def get_state(state_id):
 """Deletes a State"""
 
 
-@app_views.route('/states/<state_id>', methods=['DELETE'], 
+@app_views.route('/states/<state_id>', methods=['DELETE'],
                  strict_slashes=False)
 def delete_state(state_id):
     if not state_id:
