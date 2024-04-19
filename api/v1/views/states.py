@@ -7,7 +7,9 @@ from models import storage
 
 
 """Retrieve the list of all states"""
-@app_views.route('/states',strict_slashes=False, methods=['GET'])
+
+
+@app_views.route('/states', strict_slashes=False, methods=['GET'])
 def get_states():
     result = []
     for state in storage.all(State).values():
@@ -17,7 +19,9 @@ def get_states():
 
 
 """Retrieve a specific report"""
-@app_views.route('/states/<state_id>',strict_slashes=False, methods=['GET'])
+
+
+@app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
 def get_state(state_id):
     state = storage.get(State, state_id)
     if not state:
@@ -26,6 +30,8 @@ def get_state(state_id):
 
 
 """Supprimer un état"""
+
+
 @app_views.route('/states/<state_id>', strict_slashes=False,
                  methods=['DELETE'])
 def delete_state(state_id):
@@ -37,10 +43,14 @@ def delete_state(state_id):
     """200 indicates successful request"""
     return jsonify({}), 200
 
+
 """Create a new report"""
+
+
 @app_views.route('/states', strict_slashes=False, methods=['POST'])
 def create_state():
-    """analyzes the request body and attempts to extract the JSON data present"""
+    """analyzes the request body and attempts to extract
+    the JSON data present"""
     data = request.get_json()
     if not data:
         abort(400, "Not a JSON")
@@ -54,6 +64,8 @@ def create_state():
 
 
 """Update an existing report"""
+
+
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
 def update_state(state_id):
     state = storage.get(State, state_id)
