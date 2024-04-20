@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This module handles all default RestFul API actions for State"""
 from api.v1.views import app_views
-from flask import jsonify, request, abort
+from flask import jsonify, request, abort, make_response
 from models.state import State
 from models import storage
 
@@ -51,10 +51,10 @@ def create_state():
     """Creates a new State"""
     data = request.get_json()
     if data is None:
-        abort(400, "Not a JSON")
+        return make_response(jsonify({"error": "Not a JSON"}), 400)
 
     if data.get('name') is None:
-        abort(400, "Missing name")
+        return make_response(jsonify({"error": "Missing name"}), 400)
 
     new_state = State(**data)
     new_state.save()
@@ -71,7 +71,7 @@ def update_state(state_id):
 
     data = request.get_json()
     if data is None:
-        abort(400, "Not a JSON")
+        return make_response(jsonify({"error": "Not a JSON"}), 400)
 
     ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
