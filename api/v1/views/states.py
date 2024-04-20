@@ -59,7 +59,7 @@ def create_state():
     new_state = State(**data)
     new_state.save()
 
-    return jsonify(new_state.to_dict()), 201
+    return make_response(jsonify(new_state.to_dict()), 201)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False, methods=['PUT'])
@@ -78,4 +78,4 @@ def update_state(state_id):
         if key not in ignore_keys:
             setattr(state, key, value)
     state.save()
-    return jsonify(state.to_dict()), 200
+    return make_response(jsonify(state.to_dict()), 200)
