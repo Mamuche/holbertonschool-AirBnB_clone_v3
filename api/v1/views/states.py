@@ -49,6 +49,9 @@ def delete_state(state_id):
 @app_views.route('/states', methods=['POST'], strict_slashes=False)
 def create_state():
     """Creates a new State"""
+    if request.headers['Content-Type'] != 'application/json':
+        return make_response(jsonify({"error": "Unsupported Media Type"}), 415)
+
     data = request.get_json()
     if data is None:
         return make_response(jsonify({"error": "Not a JSON"}), 400)
